@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.simplecrud.model.Tutorial;
@@ -14,6 +16,8 @@ import com.example.simplecrud.service.TutorialService;
 
 @Controller
 public class GreetingController {
+	//@Autowired
+	//private TutorialService service;
 
 	@GetMapping("/greeting")
 	public String greeting(@RequestParam(name="name", required = false, defaultValue = "World") String name, Model model) {
@@ -82,5 +86,43 @@ public class GreetingController {
 		List<Tutorial> tutorials = service.getAllTutorials();
 		model.addAttribute("listTutorials", tutorials);
 		return "list";
+	}
+	
+	
+	@GetMapping("/add")
+	public String showAdd(Model model) {
+		TutorialService service = new TutorialService();
+		List<Tutorial> tutorials = service.getAllTutorials();
+		Tutorial newTutorial = new Tutorial();
+        model.addAttribute("tutorial", newTutorial);
+		model.addAttribute("listTutorials", tutorials);
+		return "list-add";
+	}
+	
+	@PostMapping("/addTutorial")
+	public String addTutorial(@ModelAttribute Tutorial tutorial, Model model) {
+		TutorialService service = new TutorialService();
+		service.postTutorials(tutorial);
+		
+		
+		Tutorial newTutorial = new Tutorial();
+        model.addAttribute("tutorial", newTutorial);
+		List<Tutorial> tutorials = service.getAllTutorials();
+		model.addAttribute("listTutorials", tutorials);
+		
+		//showAddAndList(model);
+		//@Autowired
+		//private TutorialService service;
+		
+		return "list-add";
+	}
+	
+	
+	public void showAddAndList(Model model) {
+		Tutorial newTutorial = new Tutorial();
+        model.addAttribute("tutorial", newTutorial);
+		TutorialService service = new TutorialService();
+		List<Tutorial> tutorials = service.getAllTutorials();
+		model.addAttribute("listTutorials", tutorials);
 	}
 }

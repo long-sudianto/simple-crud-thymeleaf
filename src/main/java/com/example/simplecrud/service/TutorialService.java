@@ -1,14 +1,8 @@
 package com.example.simplecrud.service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -51,12 +45,21 @@ public class TutorialService {
     	
     	//ResponseEntity<List<Tutorial>> response = restTemplate.exchange("http://localhost:8080/api/tutorials/", HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<List<Tutorial>>(){});
         ResponseEntity<Tutorial[]> response = restTemplate.getForEntity("http://localhost:8080/api/tutorials/", Tutorial[].class);
-                
+        
         for (int i = 0; i < response.getBody().length ; i++) {
         	tutorials.add(response.getBody()[i]);
 		}        
         
     	return tutorials;
+    }
+    
+    
+    
+    
+    public ResponseEntity<Tutorial> postTutorials(Tutorial tutorial){
+    	RestTemplate restTemplate = new RestTemplate();
+    	Tutorial response = restTemplate.postForObject("http://localhost:8080/api/tutorials/", tutorial, Tutorial.class);
+    	return ResponseEntity.ok(response);
     }
     
     
